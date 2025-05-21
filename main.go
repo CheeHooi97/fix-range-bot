@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"encoding/json"
+	conf "fix-range-bot/config"
 	"fmt"
 	"log"
 	"math"
@@ -30,6 +31,9 @@ var (
 )
 
 func main() {
+	// load config
+	conf.LoadConfig()
+
 	promptConfig()
 	startWebSocket()
 }
@@ -63,6 +67,7 @@ func scanFloat(scanner *bufio.Scanner) float64 {
 }
 
 func startWebSocket() {
+	// client := binance.NewClient(config.BinanceApiKey, config.BinanceApiSecret)
 	interval := "15m"
 
 	// Connect to Binance WebSocket for kline data
