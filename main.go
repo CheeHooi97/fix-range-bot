@@ -99,8 +99,29 @@ func handleTradeMessage(message []byte) {
 		return
 	}
 
-	priceStr := msg["p"].(string)
-	price, _ := strconv.ParseFloat(priceStr, 64)
+	kline, ok := msg["k"].(map[string]interface{})
+	if !ok {
+		log.Println("Invalid kline format")
+		return
+	}
+
+	// Only act when the kline is closed (final)
+	if isFinal, _ := kline["x"].(bool); !isFinal {
+		return
+	}
+
+	closeStr, ok := kline["c"].(string) // closing price
+	if !ok {
+		log.Println("Invalid price format")
+		return
+	}
+
+	price, err := strconv.ParseFloat(closeStr, 64)
+	if err != nil {
+		log.Println("Price parse error:", err)
+		return
+	}
+
 	handlePrice(price)
 }
 
